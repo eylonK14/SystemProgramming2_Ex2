@@ -177,11 +177,28 @@ ariel::Graph &ariel::Graph::operator--()
 ariel::Graph ariel::Graph::operator--(int)
 {
     Graph temp = *this;
-    
+
     for (auto &edge : this->_edges)
     {
         --edge.second;
     }
 
     return temp;
+}
+
+bool ariel::Graph::operator==(const Graph &other) const
+{
+    if (this->_vertexs.size() != other._vertexs.size())
+    {
+        return false;
+    }
+
+    for (const auto &edge : other._edges)
+    {
+        if ((this->_edges.find(edge.first) == this->_edges.end()))
+            return false;
+        else if (this->_edges.at(edge.first) != edge.second)
+            return false;
+    }
+    return true;
 }

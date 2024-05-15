@@ -21,16 +21,27 @@ namespace ariel
         std::map<std::pair<std::size_t, std::size_t>, int> getEdges() { return this->_edges; }
         int getVertexsSize() { return this->_vertexs.size(); }
 
-        Graph operator+(const Graph &other) const;
-        Graph &operator+=(const Graph &other);
+        Graph operator+(const Graph &) const;
+        Graph &operator+=(const Graph &);
         Graph &operator+();
-        Graph& operator++();
+        Graph &operator++();
         Graph operator++(int);
 
-        Graph operator-(const Graph &other) const;
-        Graph &operator-=(const Graph &other);
+        Graph operator-(const Graph &) const;
+        Graph &operator-=(const Graph &);
         Graph &operator-();
-        Graph& operator--();
+        Graph &operator--();
         Graph operator--(int);
+
+        friend Graph operator* (const Graph&, const Graph&);
+
+        bool operator==(const Graph &) const;
+        bool operator!=(const Graph & other)  const {return !(*this == other);};
+        bool operator>(const Graph &)  const;
+        bool operator<(const Graph &other) const {return other == *this;};
+        bool operator>=(const Graph & other) const {return (*this > other) || (*this == other);};
+        bool operator<=(const Graph & other) const {return (*this < other) || (*this == other);};;
+
+        friend std::ostream& operator<<(std::ostream&, const Graph&);
     };
 }
