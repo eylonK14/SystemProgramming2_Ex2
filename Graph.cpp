@@ -202,3 +202,13 @@ bool ariel::Graph::operator==(const Graph &other) const
     }
     return true;
 }
+
+ariel::Graph& ariel::Graph::operator*(int scalar)
+{
+        for (auto &edge : this->_edges)
+    {
+        edge.second *= scalar;
+    }
+
+    return *this;
+}

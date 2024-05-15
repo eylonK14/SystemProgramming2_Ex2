@@ -33,7 +33,8 @@ namespace ariel
         Graph &operator--();
         Graph operator--(int);
 
-        friend Graph operator* (const Graph&, const Graph&);
+        Graph operator*(const Graph &);
+        Graph& operator*(int);
 
         bool operator==(const Graph &) const;
         bool operator!=(const Graph & other)  const {return !(*this == other);};
