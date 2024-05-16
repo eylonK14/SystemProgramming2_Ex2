@@ -15,7 +15,8 @@ namespace ariel
 
     public:
         void loadGraph(std::vector<std::vector<int>>);
-        void printGraph() { std::cout << "Graph with " << this->_vertexs.size() << " vertices and " << this->_edges.size() << " edges." << std::endl; };
+        std::string printGraph();
+        std::vector<std::vector<int>> getGraphAsMatrix();
 
         std::set<std::size_t> getVertexs() { return this->_vertexs; }
         std::map<std::pair<std::size_t, std::size_t>, int> getEdges() { return this->_edges; }
@@ -33,8 +34,9 @@ namespace ariel
         Graph &operator--();
         Graph operator--(int);
 
-        Graph operator*(const Graph &);
-        Graph& operator*(int);
+        Graph operator*(Graph &);
+        Graph& operator*=(int);
+        Graph& operator/=(int);
 
         bool operator==(const Graph &) const;
         bool operator!=(const Graph & other)  const {return !(*this == other);};

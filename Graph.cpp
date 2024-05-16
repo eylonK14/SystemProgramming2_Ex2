@@ -28,6 +28,47 @@ void ariel::Graph::loadGraph(std::vector<std::vector<int>> matrix)
     }
 }
 
+std::string ariel::Graph::printGraph()
+{
+    std::string graph;
+
+    std::vector<std::vector<int>> matrixGraph = this->getGraphAsMatrix();
+    for (std::size_t v : this->_vertexs)
+    {
+        graph += "[";
+
+        for (std::size_t secV : this->_vertexs)
+        {
+            graph += std::to_string(matrixGraph[v][secV]);
+            graph += ", ";
+        }
+        graph.pop_back();
+        graph.pop_back();
+        graph += "], ";
+    }
+
+    graph.pop_back();
+    graph.pop_back();
+
+    return graph;
+}
+
+std::vector<std::vector<int>> ariel::Graph::getGraphAsMatrix()
+{
+    std::vector<std::vector<int>> matrix = {{}};
+
+    for (std::size_t i = 0; i < this->_vertexs.size(); i++)
+        for (std::size_t j = 0; j < this->_vertexs.size(); j++)
+            matrix[i][j] = 0;
+
+    for (auto &edge : this->_edges)
+    {
+        matrix[edge.first.first][edge.first.second] = edge.second;
+    }
+
+    return matrix;
+}
+
 // GRAPH OPERATORS PART 1 - MATHEMATIC OPERATORS:
 
 ariel::Graph ariel::Graph::operator+(const Graph &other) const
@@ -203,12 +244,75 @@ bool ariel::Graph::operator==(const Graph &other) const
     return true;
 }
 
-ariel::Graph& ariel::Graph::operator*(int scalar)
+ariel::Graph &ariel::Graph::operator*=(int scalar)
 {
-        for (auto &edge : this->_edges)
+    for (auto &edge : this->_edges)
     {
         edge.second *= scalar;
     }
 
     return *this;
+}
+
+ariel::Graph &ariel::Graph::operator/=(int scalar)
+{
+    for (auto &edge : this->_edges)
+    {
+        edge.second /= scalar;
+    }
+
+    return *this;
+}
+
+ariel::Graph ariel::Graph::operator*(Graph &other)
+{
+    if (this->_vertexs.size() != other._vertexs.size())
+    {
+        throw std::invalid_argument("Both graphs must be the same size.");
+    }
+
+    std::vector<std::vector<int>> firstGraph = this->getGraphAsMatrix();
+    std::vector<std::vector<int>> secondGraph = other.getGraphAsMatrix();
+    std::vector<std::vector<int>> newGraph = {{}};
+
+    for (std::size_t i = 0; i < this->_vertexs.size(); i++)
+    {
+        for (std::size_t j = 0; j < this->_vertexs.size(); j++)
+        {
+            newGraph[i][j] = 0;
+
+            for (std::size_t k = 0; k < this->_vertexs.size(); k++)
+            {
+                newGraph[i][j] += firstGraph[i][k] * secondGraph[k][j];
+            }
+        }
+    }
+
+    Graph g;
+    g.loadGraph(newGraph);
+    return g;
+}
+
+std::ostream &operator<<(std::ostream &stream, const ariel::Graph &other)
+{
+    std::string graph;
+
+    std::vector<std::vector<int>> matrixGraph = other.getGraphAsMatrix(); //need to fix
+    for (std::size_t v : other.getVertexs())
+    {
+        graph += "[";
+
+        for (std::size_t secV : other.getVertexs())
+        {
+            graph += std::to_string(matrixGraph[v][secV]);
+            graph += ", ";
+        }
+        graph.pop_back();
+        graph.pop_back();
+        graph += "], ";
+    }
+
+    graph.pop_back();
+    graph.pop_back();
+    return (stream << graph);
 }

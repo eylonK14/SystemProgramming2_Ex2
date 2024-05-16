@@ -183,7 +183,7 @@ TEST_CASE("Test graph addition")
         {0, 2, 1},
         {2, 0, 3},
         {1, 3, 0}};
-    CHECK(g3.printGraph() == "[0, 2, 1]\n[2, 0, 3]\n[1, 3, 0]");
+    CHECK(g3.printGraph() == "[0, 2, 1], [2, 0, 3], [1, 3, 0]");
 }
 
 TEST_CASE("Test graph multiplication")
@@ -205,7 +205,7 @@ TEST_CASE("Test graph multiplication")
         {0, 0, 2},
         {1, 0, 1},
         {1, 0, 0}};
-    CHECK(g4.printGraph() == "[0, 0, 2]\n[1, 0, 1]\n[1, 0, 0]");
+    CHECK(g4.printGraph() == "[0, 0, 2], [1, 0, 1], [1, 0, 0]");
 }
 
 TEST_CASE("Invalid operations")
