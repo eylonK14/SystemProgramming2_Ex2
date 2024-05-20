@@ -53,13 +53,9 @@ std::string ariel::Graph::printGraph()
     return graph;
 }
 
-std::vector<std::vector<int>> ariel::Graph::getGraphAsMatrix()
+std::vector<std::vector<int>> ariel::Graph::getGraphAsMatrix() const
 {
-    std::vector<std::vector<int>> matrix = {{}};
-
-    for (std::size_t i = 0; i < this->_vertexs.size(); i++)
-        for (std::size_t j = 0; j < this->_vertexs.size(); j++)
-            matrix[i][j] = 0;
+    std::vector<std::vector<int>> matrix(this->_vertexs.size(), std::vector<int>(this->_vertexs.size(), 0));
 
     for (auto &edge : this->_edges)
     {
@@ -160,7 +156,7 @@ ariel::Graph ariel::Graph::operator-(const Graph &other) const
 
     for (const auto &edge : this->_edges)
     {
-        newGraph[edge.first.first][edge.first.second] -= edge.second;
+        newGraph[edge.first.first][edge.first.second] = edge.second;
     }
 
     for (const auto &edge : other._edges)
@@ -244,6 +240,24 @@ bool ariel::Graph::operator==(const Graph &other) const
     return true;
 }
 
+bool ariel::Graph::operator>(const Graph &other) const
+{
+    if (other.getVertexsSize() >= this->_vertexs.size())
+    {
+        return false;
+    }
+
+    for (const auto &edge : other._edges)
+    {
+        if ((this->_edges.find(edge.first) == this->_edges.end()))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 ariel::Graph &ariel::Graph::operator*=(int scalar)
 {
     for (auto &edge : this->_edges)
@@ -256,6 +270,11 @@ ariel::Graph &ariel::Graph::operator*=(int scalar)
 
 ariel::Graph &ariel::Graph::operator/=(int scalar)
 {
+    if (!scalar)
+    {
+        throw std::invalid_argument("Can't divide by zero!");
+    }
+
     for (auto &edge : this->_edges)
     {
         edge.second /= scalar;
@@ -268,19 +287,17 @@ ariel::Graph ariel::Graph::operator*(Graph &other)
 {
     if (this->_vertexs.size() != other._vertexs.size())
     {
-        throw std::invalid_argument("Both graphs must be the same size.");
+        throw std::invalid_argument("The number of columns in the first matrix must be equal to the number of rows in the second matrix.");
     }
 
     std::vector<std::vector<int>> firstGraph = this->getGraphAsMatrix();
     std::vector<std::vector<int>> secondGraph = other.getGraphAsMatrix();
-    std::vector<std::vector<int>> newGraph = {{}};
+    std::vector<std::vector<int>> newGraph(this->_vertexs.size(), std::vector<int>(this->_vertexs.size(), 0));
 
     for (std::size_t i = 0; i < this->_vertexs.size(); i++)
     {
         for (std::size_t j = 0; j < this->_vertexs.size(); j++)
         {
-            newGraph[i][j] = 0;
-
             for (std::size_t k = 0; k < this->_vertexs.size(); k++)
             {
                 newGraph[i][j] += firstGraph[i][k] * secondGraph[k][j];
@@ -291,28 +308,4 @@ ariel::Graph ariel::Graph::operator*(Graph &other)
     Graph g;
     g.loadGraph(newGraph);
     return g;
-}
-
-std::ostream &operator<<(std::ostream &stream, const ariel::Graph &other)
-{
-    std::string graph;
-
-    std::vector<std::vector<int>> matrixGraph = other.getGraphAsMatrix(); //need to fix
-    for (std::size_t v : other.getVertexs())
-    {
-        graph += "[";
-
-        for (std::size_t secV : other.getVertexs())
-        {
-            graph += std::to_string(matrixGraph[v][secV]);
-            graph += ", ";
-        }
-        graph.pop_back();
-        graph.pop_back();
-        graph += "], ";
-    }
-
-    graph.pop_back();
-    graph.pop_back();
-    return (stream << graph);
 }

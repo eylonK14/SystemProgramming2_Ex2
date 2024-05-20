@@ -1,14 +1,16 @@
 #include "Algorithms.hpp"
 
-bool ariel::Algorithms::isConnected(ariel::Graph g)
+bool ariel::Algorithms::isConnected(ariel::Graph graph)
 {
     std::vector<std::size_t> visited = {};
 
-    for (std::size_t v : g.getVertexs())
+    for (std::size_t vertex : graph.getVertexs())
     {
-        bfs(g, v, visited);
-        if(g.getVertexsSize() == visited.size())
+        bfs(graph, vertex, visited);
+        if (graph.getVertexsSize() == visited.size())
+        {
             return true;
+        }
 
         visited.clear();
     }
@@ -16,10 +18,10 @@ bool ariel::Algorithms::isConnected(ariel::Graph g)
     return false;
 }
 
-std::string ariel::Algorithms::isContainsCycle(ariel::Graph g)
+std::string ariel::Algorithms::isContainsCycle(const ariel::Graph &graph)
 {
     std::vector<bool> ack;
-    if (findCycle(g, ack))
+    if (findCycle(graph, ack))
     {
         bool foundFirst = false;
         std::string firstNode = "";
@@ -51,10 +53,10 @@ std::string ariel::Algorithms::isContainsCycle(ariel::Graph g)
     return "0";
 }
 
-std::string ariel::Algorithms::isBipartite(ariel::Graph g)
+std::string ariel::Algorithms::isBipartite(ariel::Graph graph)
 {
     std::vector<int> color;
-    if (isBipartite(g, 0, color))
+    if (isBipartite(std::move(graph), 0, color))
     {
         std::string firstGroup = "{";
         std::string secondGroup = "{";
@@ -86,12 +88,12 @@ std::string ariel::Algorithms::isBipartite(ariel::Graph g)
     return "0";
 }
 
-std::string ariel::Algorithms::shortestPath(ariel::Graph g, int start, int end)
+std::string ariel::Algorithms::shortestPath(const ariel::Graph &graph, int start, int end)
 {
-    std::size_t s = static_cast<std::size_t>(start);
-    std::size_t e = static_cast<std::size_t>(end);
+    std::size_t newStart = static_cast<std::size_t>(start);
+    std::size_t newEnd = static_cast<std::size_t>(end);
 
-    if (g.getVertexs().find(s) == g.getVertexs().end() || g.getVertexs().find(e) == g.getVertexs().end())
+    if (graph.getVertexs().find(newStart) == graph.getVertexs().end() || graph.getVertexs().find(newEnd) == graph.getVertexs().end())
     {
         return "-1";
     }
@@ -99,12 +101,12 @@ std::string ariel::Algorithms::shortestPath(ariel::Graph g, int start, int end)
     std::vector<std::size_t> parentList;
     std::vector<int> distanceList;
 
-    std::string Bellmanford = BellmanFord(g, s, distanceList, parentList);
+    std::string Bellmanford = BellmanFord(graph, newStart, distanceList, parentList);
 
-    if (Bellmanford.compare("There are no negative cycles in the graph.") == 0)
+    if (Bellmanford == "There are no negative cycles in the graph.")
     {
-        std::string path = std::to_string(e);
-        for (std::size_t i = parentList[e]; i >= start && i != __INT_MAX__;)
+        std::string path = std::to_string(newEnd);
+        for (std::size_t i = parentList[newEnd]; i >= start && i != __INT_MAX__;)
         {
             path += ">-";
             path += std::to_string(i);
@@ -121,13 +123,13 @@ std::string ariel::Algorithms::shortestPath(ariel::Graph g, int start, int end)
     return "-1";
 }
 
-std::string ariel::Algorithms::negativeCycle(ariel::Graph g)
+std::string ariel::Algorithms::negativeCycle(ariel::Graph graph)
 {
     std::vector<std::size_t> parentList;
     std::vector<int> distanceList;
-    std::string bellmanFord = BellmanFord(g, 0, distanceList, parentList);
+    std::string bellmanFord = BellmanFord(std::move(graph), 0, distanceList, parentList);
 
-    if (bellmanFord.compare("There are no negative cycles in the graph.") == 0)
+    if (bellmanFord == "There are no negative cycles in the graph.")
     {
         return bellmanFord;
     }
@@ -137,49 +139,55 @@ std::string ariel::Algorithms::negativeCycle(ariel::Graph g)
     return cycle;
 }
 
-bool ariel::Algorithms::findCycle(ariel::Graph g, std::vector<bool> &ack)
+bool ariel::Algorithms::findCycle(const ariel::Graph &graph, std::vector<bool> &ack)
 {
     std::vector<bool> visited;
     std::set<std::pair<std::size_t, std::size_t>> usedEdges;
 
-    for (long i = 0; i < g.getVertexsSize(); i++)
+    for (long i = 0; i < graph.getVertexsSize(); i++)
     {
         visited.insert(visited.begin() + i, false);
         ack.insert(ack.begin() + i, false);
     }
 
-    for (std::size_t i = 0; i < g.getVertexsSize(); i++)
+    for (std::size_t i = 0; i < graph.getVertexsSize(); i++)
     {
-        if (!visited[i] && cycleIteration(g, i, usedEdges, visited, ack))
+        if (!visited[i] && cycleIteration(graph, i, usedEdges, visited, ack))
+        {
             return true;
+        }
     }
 
     return false;
 }
 
-bool ariel::Algorithms::cycleIteration(ariel::Graph g, std::size_t v, std::set<std::pair<std::size_t, std::size_t>> &usedEdges, std::vector<bool> &visited, std::vector<bool> &ack)
+bool ariel::Algorithms::cycleIteration(const ariel::Graph &graph, std::size_t vertex, std::set<std::pair<std::size_t, std::size_t>> &usedEdges, std::vector<bool> &visited, std::vector<bool> &ack)
 {
-    if (!visited[v])
+    if (!visited[vertex])
     {
-        visited[v] = true;
-        ack[v] = true;
+        visited[vertex] = true;
+        ack[vertex] = true;
     }
 
-    for (auto &edge : g.getEdges())
+    for (auto &edge : graph.getEdges())
     {
-        if (edge.first.first == v && (usedEdges.find(edge.first) == usedEdges.end()) && usedEdges.find(std::make_pair(edge.first.second, edge.first.first)) == usedEdges.end())
+        if (edge.first.first == vertex && (usedEdges.find(edge.first) == usedEdges.end()) && usedEdges.find(std::make_pair(edge.first.second, edge.first.first)) == usedEdges.end())
         {
             usedEdges.insert(edge.first);
             usedEdges.insert(std::make_pair(edge.first.second, edge.first.first));
 
-            if (!visited[edge.first.second] && cycleIteration(g, edge.first.second, usedEdges, visited, ack))
+            if (!visited[edge.first.second] && cycleIteration(graph, edge.first.second, usedEdges, visited, ack))
+            {
                 return true;
-            else if (ack[edge.first.second])
+            }
+            if (ack[edge.first.second])
+            {
                 return true;
+            }
         }
     }
 
-    ack[v] = false;
+    ack[vertex] = false;
     return false;
 }
 
@@ -278,7 +286,7 @@ void ariel::Algorithms::bfs(ariel::Graph &g, std::size_t s, std::vector<std::siz
 {
     std::vector<int> color;
     std::vector<int> distance;
-     for (long v = 0; v < g.getVertexs().size(); v++)
+    for (long v = 0; v < g.getVertexs().size(); v++)
     {
         color.insert(color.begin() + v, -1);
         distance.insert(distance.begin() + v, __INT_MAX__);
@@ -302,7 +310,7 @@ void ariel::Algorithms::bfs(ariel::Graph &g, std::size_t s, std::vector<std::siz
             if (ver == s)
             {
                 std::size_t secVer = edge.first.second;
-                if(color[secVer] == -1)
+                if (color[secVer] == -1)
                 {
                     color[secVer] = 0;
                     visited.push_back(secVer);

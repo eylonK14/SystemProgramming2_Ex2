@@ -29,7 +29,7 @@ int main()
         std::cerr << e.what() << '\n';
     }
 
-    cout << g.printGraph();                                                         // Should print: "Graph with 3 vertices and 4 edges."
+    cout << g.printGraph() << std::endl;                                                        // Should print: "Graph with 3 vertices and 4 edges."
     cout << "is connected: " << Algorithms::isConnected(g) << endl;         // Should print: "1" (true).
     cout << "shortest path: " << Algorithms::shortestPath(g, 0, 2) << endl; // Should print: 0->1->2.
     cout << "contains cycle: " << Algorithms::isContainsCycle(g) << endl;   // Should print: "0" (false).
@@ -52,7 +52,7 @@ int main()
         std::cerr << e.what() << '\n';
     }
 
-    cout << g.printGraph();                                                         // Should print: "Graph with 5 vertices and 8 edges."
+    cout << g.printGraph() << std::endl;                                                        // Should print: "Graph with 5 vertices and 8 edges."
     cout << "is connected: " << Algorithms::isConnected(g) << endl;         // Should print: "0" (false).
     cout << "shortest path: " << Algorithms::shortestPath(g, 0, 4) << endl; // Should print: "-1" (there is no path between 0 and 4).
     cout << "contains cycle: " << Algorithms::isContainsCycle(g) << endl;   // Should print: "The cycle is: 0->1->2->0".
@@ -75,7 +75,7 @@ int main()
         std::cerr << e.what() << '\n';
     }
 
-    cout << g.printGraph();                                                         // Should print: "Graph with 5 vertices and 10 edges."
+    cout << g.printGraph() << std::endl;                                                 // Should print: "Graph with 5 vertices and 10 edges."
     cout << "is connected: " << Algorithms::isConnected(g) << endl;         // Should print: "1" (true).
     cout << "shortest path: " << Algorithms::shortestPath(g, 0, 4) << endl; // Should print: 0->2->3->4.
     cout << "contains cycle: " << Algorithms::isContainsCycle(g) << endl;   // Should print:
