@@ -24,7 +24,7 @@ std::string ariel::Algorithms::isContainsCycle(const ariel::Graph &graph)
     if (findCycle(graph, ack))
     {
         bool foundFirst = false;
-        std::string firstNode = "";
+        std::string firstNode;
         std::string path = "The cycle is: ";
 
         for (std::size_t i = 0; i < ack.size(); i++)
@@ -53,10 +53,10 @@ std::string ariel::Algorithms::isContainsCycle(const ariel::Graph &graph)
     return "0";
 }
 
-std::string ariel::Algorithms::isBipartite(ariel::Graph graph)
+std::string ariel::Algorithms::isBipartite(const ariel::Graph& graph)
 {
     std::vector<int> color;
-    if (isBipartite(std::move(graph), 0, color))
+    if (isBipartite(graph, 0, color))
     {
         std::string firstGroup = "{";
         std::string secondGroup = "{";
@@ -123,11 +123,11 @@ std::string ariel::Algorithms::shortestPath(const ariel::Graph &graph, int start
     return "-1";
 }
 
-std::string ariel::Algorithms::negativeCycle(ariel::Graph graph)
+std::string ariel::Algorithms::negativeCycle(const ariel::Graph &graph)
 {
     std::vector<std::size_t> parentList;
     std::vector<int> distanceList;
-    std::string bellmanFord = BellmanFord(std::move(graph), 0, distanceList, parentList);
+    std::string bellmanFord = BellmanFord(graph, 0, distanceList, parentList);
 
     if (bellmanFord == "There are no negative cycles in the graph.")
     {
@@ -191,25 +191,25 @@ bool ariel::Algorithms::cycleIteration(const ariel::Graph &graph, std::size_t ve
     return false;
 }
 
-bool ariel::Algorithms::isBipartite(ariel::Graph g, int start, std::vector<int> &color)
+bool ariel::Algorithms::isBipartite(const ariel::Graph& graph, int start, std::vector<int> &color)
 {
-    std::size_t s = static_cast<std::size_t>(start);
-    std::queue<std::size_t> q;
+    std::size_t newStart = static_cast<std::size_t>(start);
+    std::queue<std::size_t> queue;
 
-    for (long i = 0; i < g.getVertexs().size(); i++)
+    for (long i = 0; i < graph.getVertexs().size(); i++)
     {
         color.insert(color.begin() + i, 0);
     }
 
-    color[s] = 1;
-    q.push(s);
+    color[newStart] = 1;
+    queue.push(newStart);
 
-    while (!q.empty())
+    while (!queue.empty())
     {
-        std::size_t ver = q.front();
-        q.pop();
+        std::size_t ver = queue.front();
+        queue.pop();
 
-        for (const auto &edge : g.getEdges())
+        for (const auto &edge : graph.getEdges())
         {
             if (edge.first.first == ver)
             {
@@ -217,13 +217,21 @@ bool ariel::Algorithms::isBipartite(ariel::Graph g, int start, std::vector<int> 
                 if (color[secVer] == 0)
                 {
                     if (color[ver] == 1)
-                        color[secVer] = -1;
+                    {
+                                                color[secVer] = -1;
+                    }
                     else
+                    {
                         color[secVer] = 1;
-                    q.push(secVer);
+                    }
+
+                    queue.push(secVer);
                 }
                 else if (color[ver] == color[secVer])
+                {
                     return false;
+                }
+
             }
         }
     }
@@ -240,9 +248,9 @@ void ariel::Algorithms::relax(std::pair<std::pair<std::size_t, std::size_t>, int
     }
 }
 
-std::string ariel::Algorithms::BellmanFord(ariel::Graph g, std::size_t start, std::vector<int> &distanceList, std::vector<std::size_t> &parentList)
+std::string ariel::Algorithms::BellmanFord(const ariel::Graph& graph , std::size_t start, std::vector<int> &distanceList, std::vector<std::size_t> &parentList)
 {
-    for (long i = 0; i < g.getVertexs().size(); i++)
+    for (long i = 0; i < graph.getVertexs().size(); i++)
     {
         distanceList.insert(distanceList.begin() + i, __INT_MAX__);
         parentList.insert(parentList.begin() + i, __INT_MAX__);
@@ -250,29 +258,29 @@ std::string ariel::Algorithms::BellmanFord(ariel::Graph g, std::size_t start, st
 
     distanceList[start] = 0;
 
-    for (std::size_t i = 0; i < g.getVertexsSize() - 1; i++)
+    for (std::size_t i = 0; i < graph.getVertexsSize() - 1; i++)
     {
-        for (const auto &edge : g.getEdges())
+        for (const auto &edge : graph.getEdges())
         {
             relax(edge, distanceList, parentList);
         }
     }
 
-    for (const auto &edge : g.getEdges())
+    for (const auto &edge : graph.getEdges())
     {
         if (distanceList[edge.first.second] > distanceList[edge.first.first] + edge.second)
         {
             std::size_t father = edge.first.first;
             std::string path = std::to_string(father);
-            std::size_t i = parentList[father];
+            std::size_t index = parentList[father];
             bool flag = true;
 
             while (flag)
             {
                 path += ">-";
-                path += std::to_string(i);
-                i = parentList[i];
-                flag = !(i == parentList[father]);
+                path += std::to_string(index);
+                index = parentList[index];
+                flag = !(index == parentList[father]);
             }
 
             return path;
@@ -282,44 +290,44 @@ std::string ariel::Algorithms::BellmanFord(ariel::Graph g, std::size_t start, st
     return "There are no negative cycles in the graph.";
 }
 
-void ariel::Algorithms::bfs(ariel::Graph &g, std::size_t s, std::vector<std::size_t> &visited)
+void ariel::Algorithms::bfs(ariel::Graph &graph, std::size_t start, std::vector<std::size_t> &visited)
 {
     std::vector<int> color;
     std::vector<int> distance;
-    for (long v = 0; v < g.getVertexs().size(); v++)
+    for (long vertex = 0; vertex < graph.getVertexs().size(); vertex++)
     {
-        color.insert(color.begin() + v, -1);
-        distance.insert(distance.begin() + v, __INT_MAX__);
+        color.insert(color.begin() + vertex, -1);
+        distance.insert(distance.begin() + vertex, __INT_MAX__);
     }
 
-    color[s] = 0;
-    distance[s] = 0;
-    visited.push_back(s);
+    color[start] = 0;
+    distance[start] = 0;
+    visited.push_back(start);
 
-    std::queue<std::size_t> q;
-    q.push(s);
+    std::queue<std::size_t> queue;
+    queue.push(start);
 
-    while (!q.empty())
+    while (!queue.empty())
     {
-        std::size_t u = q.front();
-        q.pop();
+        std::size_t value = queue.front();
+        queue.pop();
 
-        for (const auto &edge : g.getEdges())
+        for (const auto &edge : graph.getEdges())
         {
             std::size_t ver = edge.first.first;
-            if (ver == s)
+            if (ver == start)
             {
                 std::size_t secVer = edge.first.second;
                 if (color[secVer] == -1)
                 {
                     color[secVer] = 0;
                     visited.push_back(secVer);
-                    distance[secVer] = distance[u] + 1;
-                    q.push(secVer);
+                    distance[secVer] = distance[value] + 1;
+                    queue.push(secVer);
                 }
             }
         }
 
-        color[u] = 1;
+        color[value] = 1;
     }
 }

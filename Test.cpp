@@ -2,17 +2,19 @@
 #include "Algorithms.hpp"
 #include "Graph.hpp"
 
+#define FIVE 5 
+
 using namespace std;
 
 TEST_CASE("Test isConnected")
 {
-    ariel::Graph g;
-    vector<vector<int>> graph = {
+    ariel::Graph graph;
+    vector<vector<int>> graph1 = {
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isConnected(g) == true);
+    graph.loadGraph(graph1);
+    CHECK(ariel::Algorithms::isConnected(graph) == true);
 
     vector<vector<int>> graph2 = {
         {0, 1, 1, 0, 0},
@@ -20,22 +22,22 @@ TEST_CASE("Test isConnected")
         {1, 1, 0, 1, 0},
         {0, 0, 1, 0, 0},
         {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isConnected(g) == false);
+    graph.loadGraph(graph2);
+    CHECK(ariel::Algorithms::isConnected(graph) == false);
     vector<vector<int>> graph3 = {{0}};
-    g.loadGraph(graph3);
-    CHECK(ariel::Algorithms::isConnected(g) == true);
+    graph.loadGraph(graph3);
+    CHECK(ariel::Algorithms::isConnected(graph) == true);
 }
 
 TEST_CASE("Test shortestPath")
 {
-    ariel::Graph g;
-    vector<vector<int>> graph = {
+    ariel::Graph graph;
+    vector<vector<int>> graph1 = {
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 2) == "0->1->2");
+    graph.loadGraph(graph1);
+    CHECK(ariel::Algorithms::shortestPath(graph, 0, 2) == "0->1->2");
 
     vector<vector<int>> graph2 = {
         {0, 1, 1, 0, 0},
@@ -43,39 +45,39 @@ TEST_CASE("Test shortestPath")
         {1, 1, 0, 1, 0},
         {0, 0, 1, 0, 0},
         {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 4) == "-1");
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 0) == "0");
+    graph.loadGraph(graph2);
+    CHECK(ariel::Algorithms::shortestPath(graph, 0, 4) == "-1");
+    CHECK(ariel::Algorithms::shortestPath(graph, 0, 0) == "0");
 
-    vector<vector<int>> graph5 = {
+    vector<vector<int>> graphFIVE = {
         {0, 1, -4},
         {-2, 0, 3},
         {4, -3, 0}};
-    g.loadGraph(graph5);
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 2) == "-1");
+    graph.loadGraph(graphFIVE);
+    CHECK(ariel::Algorithms::shortestPath(graph, 0, 2) == "-1");
 
     vector<vector<int>> graph4 = {
         {0, 1, 0, 0, 0},
         {1, 0, 3, 0, 0},
         {0, 3, 0, 4, 0},
-        {0, 0, 4, 0, 5},
-        {0, 0, 0, 5, 0}};
-    g.loadGraph(graph4);
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 4) == "0->1->2->3->4");
+        {0, 0, 4, 0, FIVE},
+        {0, 0, 0, FIVE, 0}};
+    graph.loadGraph(graph4);
+    CHECK(ariel::Algorithms::shortestPath(graph, 0, 4) == "0->1->2->3->4");
 
     vector<vector<int>> graph3 = {{0}};
-    g.loadGraph(graph3);
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 0) == "0");
+    graph.loadGraph(graph3);
+    CHECK(ariel::Algorithms::shortestPath(graph, 0, 0) == "0");
 }
 TEST_CASE("Test isContainsCycle")
 {
-    ariel::Graph g;
-    vector<vector<int>> graph = {
+    ariel::Graph graph;
+    vector<vector<int>> graph1 = {
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isContainsCycle(g) == "0");
+    graph.loadGraph(graph1);
+    CHECK(ariel::Algorithms::isContainsCycle(graph) == "0");
 
     vector<vector<int>> graph2 = {
         {0, 1, 1, 0, 0},
@@ -83,29 +85,29 @@ TEST_CASE("Test isContainsCycle")
         {1, 1, 0, 1, 0},
         {0, 0, 1, 0, 0},
         {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 0->1->2->0");
+    graph.loadGraph(graph2);
+    CHECK(ariel::Algorithms::isContainsCycle(graph) == "The cycle is: 0->1->2->0");
 
-    vector<vector<int>> graph5 = {
+    vector<vector<int>> graphFIVE = {
         {0, 1, -4},
         {-2, 0, 3},
         {4, -3, 0}};
-    g.loadGraph(graph5);
-    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 0->1->2->0");
+    graph.loadGraph(graphFIVE);
+    CHECK(ariel::Algorithms::isContainsCycle(graph) == "The cycle is: 0->1->2->0");
 
     vector<vector<int>> graph3 = {{0}};
-    g.loadGraph(graph3);
-    CHECK(ariel::Algorithms::isContainsCycle(g) == "0");
+    graph.loadGraph(graph3);
+    CHECK(ariel::Algorithms::isContainsCycle(graph) == "0");
 }
 TEST_CASE("Test isBipartite")
 {
-    ariel::Graph g;
-    vector<vector<int>> graph = {
+    ariel::Graph graph;
+    vector<vector<int>> graph1 = {
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 2}, B={1}.");
+    graph.loadGraph(graph1);
+    CHECK(ariel::Algorithms::isBipartite(graph) == "The graph is bipartite: A={0, 2}, B={1}.");
 
     vector<vector<int>> graph2 = {
         {0, 1, 1, 0, 0},
@@ -113,46 +115,46 @@ TEST_CASE("Test isBipartite")
         {1, 1, 0, 1, 0},
         {0, 0, 1, 0, 0},
         {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isBipartite(g) == "0");
+    graph.loadGraph(graph2);
+    CHECK(ariel::Algorithms::isBipartite(graph) == "0");
 
     vector<vector<int>> graph3 = {
         {0, 1, 0, 0, 0},
         {1, 0, 3, 0, 0},
         {0, 3, 0, 4, 0},
-        {0, 0, 4, 0, 5},
-        {0, 0, 0, 5, 0}};
-    g.loadGraph(graph3);
-    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 2, 4}, B={1, 3}.");
+        {0, 0, 4, 0, FIVE},
+        {0, 0, 0, FIVE, 0}};
+    graph.loadGraph(graph3);
+    CHECK(ariel::Algorithms::isBipartite(graph) == "The graph is bipartite: A={0, 2, 4}, B={1, 3}.");
 }
 TEST_CASE("Test invalid graph")
 {
-    ariel::Graph g;
-    vector<vector<int>> graph = {
+    ariel::Graph graph;
+    vector<vector<int>> graph1 = {
         {0, 1, 2, 0},
         {1, 0, 3, 0},
         {2, 3, 0, 4},
         {0, 0, 4, 0},
-        {0, 0, 0, 5}};
-    CHECK_THROWS(g.loadGraph(graph));
+        {0, 0, 0, FIVE}};
+    CHECK_THROWS(graph.loadGraph(graph1));
 }
 
 TEST_CASE("Test negativeCycle")
 {
-    ariel::Graph g;
-    vector<vector<int>> graph5 = {
+    ariel::Graph graph;
+    vector<vector<int>> graphFIVE = {
         {0, 1, -4},
         {-2, 0, 3},
         {4, -3, 0}};
-    g.loadGraph(graph5);
-    CHECK(ariel::Algorithms::negativeCycle(g) == "The negative cycle is: 0->2->1->0");
+    graph.loadGraph(graphFIVE);
+    CHECK(ariel::Algorithms::negativeCycle(graph) == "The negative cycle is: 0->2->1->0");
 
-    vector<vector<int>> graph = {
+    vector<vector<int>> graph1 = {
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::negativeCycle(g) == "There are no negative cycles in the graph.");
+    graph.loadGraph(graph1);
+    CHECK(ariel::Algorithms::negativeCycle(graph) == "There are no negative cycles in the graph.");
 
     vector<vector<int>> graph2 = {
         {0, 1, 1, 0, 0},
@@ -160,155 +162,149 @@ TEST_CASE("Test negativeCycle")
         {1, 1, 0, 1, 0},
         {0, 0, 1, 0, 0},
         {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::negativeCycle(g) == "There are no negative cycles in the graph.");
+    graph.loadGraph(graph2);
+    CHECK(ariel::Algorithms::negativeCycle(graph) == "There are no negative cycles in the graph.");
 }
 
 TEST_CASE("Test graph addition")
 {
-    ariel::Graph g1;
+    ariel::Graph graph1;
     vector<vector<int>> graph = {
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g1.loadGraph(graph);
-    ariel::Graph g2;
+    graph1.loadGraph(graph);
+    ariel::Graph graph2;
     vector<vector<int>> weightedGraph = {
         {0, 1, 1},
         {1, 0, 2},
         {1, 2, 0}};
-    g2.loadGraph(weightedGraph);
-    ariel::Graph g3 = g1 + g2;
+    graph2.loadGraph(weightedGraph);
+    ariel::Graph graph3 = graph1 + graph2;
     vector<vector<int>> expectedGraph = {
         {0, 2, 1},
         {2, 0, 3},
         {1, 3, 0}};
     ariel::Graph newG;
     newG.loadGraph(expectedGraph);
-    CHECK(g3 == newG);
+    CHECK(graph3 == newG);
 
-    g1++;
-    ++g1;
-    vector<vector<int>> graph2 = {
+    graph1++;
+    ++graph1;
+    vector<vector<int>> graph22 = {
         {0, 3, 0},
         {3, 0, 3},
         {0, 3, 0}};
-    ariel::Graph g5;
-    g5.loadGraph(graph2);
-    CHECK(g5 == g1);
-    CHECK(+g5 == g5);
+    ariel::Graph gFIVE;
+    gFIVE.loadGraph(graph22);
+    CHECK(gFIVE == graph1);
+    CHECK(+gFIVE == gFIVE);
 }
 
 TEST_CASE("Test graph subtraction")
 {
-    ariel::Graph g1;
+    ariel::Graph graph1;
     vector<vector<int>> graph = {
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g1.loadGraph(graph);
-    ariel::Graph g2;
+    graph1.loadGraph(graph);
+    ariel::Graph graph2;
     vector<vector<int>> weightedGraph = {
         {0, 1, 1},
         {1, 0, 2},
         {1, 2, 0}};
-    g2.loadGraph(weightedGraph);
-    ariel::Graph g3 = g1 - g2;
+    graph2.loadGraph(weightedGraph);
+    ariel::Graph graph3 = graph1 - graph2;
     vector<vector<int>> expectedGraph = {
         {0, 0, -1},
         {0, 0, -1},
         {-1, -1, 0}};
     ariel::Graph newG;
     newG.loadGraph(expectedGraph);
-    CHECK(g3 == newG);
+    CHECK(graph3 == newG);
 
-    g1--;
-    --g1;
-    vector<vector<int>> graph2 = {
+    graph1--;
+    --graph1;
+    vector<vector<int>> graph22 = {
         {0, -1, 0},
         {-1, 0, -1},
         {0, -1, 0}};
-    ariel::Graph g5;
-    g5.loadGraph(graph2);
-    CHECK(g5 == g1);
-    g1.loadGraph(graph);
-    CHECK(g5 == -g1);
+    ariel::Graph gFIVE;
+    gFIVE.loadGraph(graph22);
+    CHECK(gFIVE == graph1);
+    graph1.loadGraph(graph);
+    CHECK(gFIVE == -graph1);
 }
 
 TEST_CASE("Test graph multiplication")
 {
-    ariel::Graph g1;
+    ariel::Graph graph1;
     vector<vector<int>> graph = {
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g1.loadGraph(graph);
-    ariel::Graph g2;
+    graph1.loadGraph(graph);
+    ariel::Graph graph2;
     vector<vector<int>> weightedGraph = {
         {0, 1, 1},
         {1, 0, 2},
         {1, 2, 0}};
-    g2.loadGraph(weightedGraph);
-    ariel::Graph g4 = g1 * g2;
+    graph2.loadGraph(weightedGraph);
+    ariel::Graph graph4 = graph1 * graph2;
     vector<vector<int>> expectedGraph = {
         {1, 0, 2},
         {1, 3, 1},
         {1, 0, 2}};
     ariel::Graph newG;
     newG.loadGraph(expectedGraph);
-    CHECK(g4 == newG);
+    CHECK(graph4 == newG);
 
-    g1 *= 5;
-    vector<vector<int>> graph2 = {
-        {0, 5, 0},
-        {5, 0, 5},
-        {0, 5, 0}};
-    ariel::Graph g5;
-    g5.loadGraph(graph2);
-    CHECK(g5 == g1);
+    graph1 *= FIVE;
+    vector<vector<int>> graph22 = {
+        {0, FIVE, 0},
+        {FIVE, 0, FIVE},
+        {0, FIVE, 0}};
+    ariel::Graph gFIVE;
+    gFIVE.loadGraph(graph22);
+    CHECK(gFIVE == graph1);
 
     vector<vector<int>> graph3 = {
         {0, 1},
         {1, 0}};
 
-    g1.loadGraph(graph3);
-    g1 *= 0;
+    graph1.loadGraph(graph3);
+    graph1 *= 0;
 
-    vector<vector<int>> graph4 = {
+    vector<vector<int>> graph44 = {
         {0, 0},
         {0, 0}};
-    g2.loadGraph(graph4);
-    CHECK(g1 == g2);
+    graph2.loadGraph(graph44);
+    CHECK(graph1 == graph2);
 }
 
 TEST_CASE("Test graph division")
 {
-    ariel::Graph g1;
-    vector<vector<int>> graph = {
-        {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 0}};
-    g1.loadGraph(graph);
-    ariel::Graph g2;
+    ariel::Graph graph2;
     vector<vector<int>> weightedGraph = {
         {0, 2, 2},
         {2, 0, 2},
         {2, 2, 0}};
-    g2.loadGraph(weightedGraph);
-    g2 /= 2;
+    graph2.loadGraph(weightedGraph);
+    graph2 /= 2;
     vector<vector<int>> expectedGraph = {
         {0, 1, 1},
         {1, 0, 1},
         {1, 1, 0}};
     ariel::Graph newG;
     newG.loadGraph(expectedGraph);
-    CHECK(g2 == newG);
+    CHECK(graph2 == newG);
 }
 
 TEST_CASE("Boolean Operations")
 {
-    ariel::Graph g1;
-    ariel::Graph g2;
+    ariel::Graph graph1;
+    ariel::Graph graph2;
     vector<vector<int>> graph = {
         {0, 1, 0},
         {1, 0, 1},
@@ -317,62 +313,62 @@ TEST_CASE("Boolean Operations")
         {0, 1},
         {1, 0}};
 
-    g1.loadGraph(graph3);
-    g1 *= 0;
+    graph1.loadGraph(graph3);
+    graph1 *= 0;
 
     vector<vector<int>> graph4 = {
         {0, 0},
         {0, 0}};
-    g2.loadGraph(graph3);
-    CHECK(g1 != g2);
+    graph2.loadGraph(graph3);
+    CHECK(graph1 != graph2);
 
-    g1.loadGraph(graph);
+    graph1.loadGraph(graph);
 
-    CHECK(g1 > g2);
-    CHECK(g1 >= g2);
+    CHECK(graph1 > graph2);
+    CHECK(graph1 >= graph2);
 
-    g1.loadGraph(graph3);
-    g2.loadGraph(graph);
+    graph1.loadGraph(graph3);
+    graph2.loadGraph(graph);
 
-    CHECK(g1 < g2);
-    CHECK(g1 <= g2);
+    CHECK(graph1 < graph2);
+    CHECK(graph1 <= graph2);
 }
 
 TEST_CASE("Invalid operations")
 {
-    ariel::Graph g1;
+    ariel::Graph graph1;
     vector<vector<int>> graph = {
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g1.loadGraph(graph);
-    ariel::Graph g2;
+    graph1.loadGraph(graph);
+    ariel::Graph graph2;
     vector<vector<int>> weightedGraph = {
         {0, 1, 1, 1},
         {1, 0, 2, 1},
         {1, 2, 0, 1}};
-    CHECK_THROWS(g2.loadGraph(weightedGraph));
-    ariel::Graph g5;
-    vector<vector<int>> graph2 = {
+    CHECK_THROWS(graph2.loadGraph(weightedGraph));
+    ariel::Graph gFIVE;
+    vector<vector<int>> graph22 = {
         {0, 1, 0, 0, 1},
         {1, 0, 1, 0, 0},
         {0, 1, 0, 1, 0},
         {0, 0, 1, 0, 1},
         {1, 0, 0, 1, 0}};
-    g5.loadGraph(graph2);
-    CHECK_THROWS(g5 * g1);
-    CHECK_THROWS(g1 * g2);
+    gFIVE.loadGraph(graph22);
+    CHECK_THROWS(gFIVE * graph1);
+    CHECK_THROWS(graph1 * graph2);
 
     // Addition of two graphs with different dimensions
-    ariel::Graph g6;
+    ariel::Graph graph6;
     vector<vector<int>> graph3 = {
         {0, 1, 0, 0, 1},
         {1, 0, 1, 0, 0},
         {0, 1, 0, 1, 0},
         {0, 0, 1, 0, 1},
         {1, 0, 0, 1, 0}};
-    g6.loadGraph(graph3);
-    CHECK_THROWS(g1 + g6);
+    graph6.loadGraph(graph3);
+    CHECK_THROWS(graph1 + graph6);
 
-    CHECK_THROWS(g1 /= 0);
+    CHECK_THROWS(graph1 /= 0);
 }

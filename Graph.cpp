@@ -33,13 +33,13 @@ std::string ariel::Graph::printGraph()
     std::string graph;
 
     std::vector<std::vector<int>> matrixGraph = this->getGraphAsMatrix();
-    for (std::size_t v : this->_vertexs)
+    for (std::size_t vertex : this->_vertexs)
     {
         graph += "[";
 
         for (std::size_t secV : this->_vertexs)
         {
-            graph += std::to_string(matrixGraph[v][secV]);
+            graph += std::to_string(matrixGraph[vertex][secV]);
             graph += ", ";
         }
         graph.pop_back();
@@ -57,7 +57,7 @@ std::vector<std::vector<int>> ariel::Graph::getGraphAsMatrix() const
 {
     std::vector<std::vector<int>> matrix(this->_vertexs.size(), std::vector<int>(this->_vertexs.size(), 0));
 
-    for (auto &edge : this->_edges)
+    for (const auto &edge : this->_edges)
     {
         matrix[edge.first.first][edge.first.second] = edge.second;
     }
@@ -86,9 +86,9 @@ ariel::Graph ariel::Graph::operator+(const Graph &other) const
         newGraph[edge.first.first][edge.first.second] += edge.second;
     }
 
-    Graph g;
-    g.loadGraph(newGraph);
-    return g;
+    Graph graph;
+    graph.loadGraph(newGraph);
+    return graph;
 }
 
 ariel::Graph &ariel::Graph::operator+=(const Graph &other)
@@ -164,9 +164,9 @@ ariel::Graph ariel::Graph::operator-(const Graph &other) const
         newGraph[edge.first.first][edge.first.second] -= edge.second;
     }
 
-    Graph g;
-    g.loadGraph(newGraph);
-    return g;
+    Graph graph;
+    graph.loadGraph(newGraph);
+    return graph;
 }
 
 ariel::Graph &ariel::Graph::operator-=(const Graph &other)
@@ -229,13 +229,16 @@ bool ariel::Graph::operator==(const Graph &other) const
     {
         return false;
     }
-
     for (const auto &edge : other._edges)
     {
         if ((this->_edges.find(edge.first) == this->_edges.end()))
+        {
             return false;
-        else if (this->_edges.at(edge.first) != edge.second)
+        }
+        if ((this->_edges.at(edge.first) != edge.second))
+        {
             return false;
+        }
     }
     return true;
 }
@@ -270,7 +273,7 @@ ariel::Graph &ariel::Graph::operator*=(int scalar)
 
 ariel::Graph &ariel::Graph::operator/=(int scalar)
 {
-    if (!scalar)
+    if (scalar == 0)
     {
         throw std::invalid_argument("Can't divide by zero!");
     }
@@ -305,7 +308,7 @@ ariel::Graph ariel::Graph::operator*(Graph &other)
         }
     }
 
-    Graph g;
-    g.loadGraph(newGraph);
-    return g;
+    Graph graph;
+    graph.loadGraph(newGraph);
+    return graph;
 }
