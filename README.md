@@ -1,16 +1,40 @@
-# מטלה 1 - גרפים (Classes and Namespaces)
+## Assignment 2 - Graphs (Classes and Namespaces)
 
-במטלה זו יצרנו אובייקט גרף, ועליו הרצנו אלגוריתמים שונים
-הגרף הוגדר באופן הקלאסי שלו - קבוצת קודקודים, ובכדי לייצג את קבוצת הצלעות, מיפיתי כל צעל למשקל שלה, כשאר התעלמתי מצלעות במשקל 0
+In this assignment, we created a graph object and ran different algorithms on it
+The graph was defined in its classic way - a group of vertices, to represent the group of edges, I mapped each cell to its weight, while for the rest I ignored edges with a weight of 0.
 
-הקובץ `Algorithms.cpp` מכיל מימושים לאלגוריתמים על גרפים. ביניהם:
+The file `Graph.cpp` contains an implementation of a graph and various graph actions using operators.
 
-- `isConnected(g)` - האלגוריתם מקבל גרף ומחזיר 1 אם הגרף קשיר (אחרת מחזיר 0). בכדי לממש אלגוריתם זה, בחרתי להשתמש בטכניקה של חיפוש לרוחב תוך ריצה על כל הקודקודים, ובדיקה האם בריצה מסוימת הגעתי מקודקוד מסוים לכל הקודקודים.
-- `shortestPath(g,start,end)` - האלגוריתם מקבל גרף, קודקוד התחלה וקודקוד סיום ומחזיר את המסלול הקל ביותר (במקרה שהגרף לא ממושקל - הקצר ביותר) בין שני הקודקודים. במידה ואין מסלול כזה, האלגוריתם יחזיר -1. בכדי לממש אלגוריתם זה, כיוון שמשקל הצלעות יכול להיות שלילי, בחרתי להשתמש באלגוריתם בלמן פורד, שיחזיר לי את הדרך הקצרה ביותר גם במידה ויש בגרף משקלים שליליים.
-- `isContainsCycle(g)` - האלגוריתם מקבל גרף ומדפיס מעגל כלשהו. אם לא קיים מעגל בגרף, האלגוריתם יחזיר 0. במימוש אלגוריתם זה השתמשתי בחיפוש לרוחב, וכך יכלתי לעבור על הגרף כמה פעמים עד שמצאתי את המעגל.
-- `isBipartite(g)` - האלגוריתם מקבל גרף ומחזיר את החלוקה של הגרף לגרף דו-צדדי. אם אי אפשר לחלק את הגרף, האלגוריתם יחזיר 0. במימוש אלגוריתם זה עברתי על כל הצלעות בכדי לבדוק האם ניתן לצבוע כל זוג קודקודים המחוברים ע"י צלע בשני צבעים נפרדים.
-- `negativeCycle(g)` - האלגוריתם מקבל גרף ומוצא מעגל שלילי (כלומר מעגל שסכום המשקלים של הצלעות שלילי). אם לא קיים מעגל כזה, האלגוריתם ידפיס שלא קיים מעגל שלילי.
+The file `Algorithms.cpp` contains implementations for algorithms on graphs. Including:
 
-הקובץ `Demo.cpp` מכיל דוגמאות של קלטים ופלטים.
-הקובץ `Test.cpp` מכיל בתוכו בדיקות שונות לפונקציות שבוצעו בתוכנית, כולל בדיקות למקרי קצה שונים כגון גרף ריק וגרף בעל מעגל שלילי.
+- `isConnected(g)` - The algorithm accepts a graph and returns 1 if the graph is connected (otherwise returns 0). To realize this algorithm, I chose to use the technique of lateral search while running on all the vertices, and checking whether in a certain run, I reached all the vertices from a certain vertex.
+- `shortestPath(g,start,end)` - The algorithm receives a graph, a start vertex, and an end vertex and returns the easiest path (in case the graph is not weighted - the shortest) between the two vertices. If there is no such route, the algorithm will return -1. To implement this algorithm, since the weight of the edges can be negative, I chose to use the Balman Ford algorithm, which will return me the shortest path even if there are negative weights in the graph.
+- `isContainsCycle(g)` - The algorithm receives a graph and prints some cycles. If there is no circle in the graph, the algorithm will return 0. In implementing this algorithm, I used lateral search, and thus I could go over the graph several times until I found the circle.
+- `isBipartite(g)` - The algorithm accepts a graph and returns the partition of the graph into a bipartite graph. If the graph cannot be divided, the algorithm will return 0. In implementing this algorithm, I went through all the edges to check if it is possible to color each pair of vertices connected by an edge with two separate colors.
+- `negativeCycle(g)` - the algorithm receives a graph and finds a negative cycle (that is, a cycle whose sum of the weights of the sides is negative). If no such circle exists, the algorithm will print that there is no negative circle.
+
+The `Demo.cpp` file contains examples of inputs and outputs.
+The `Test.cpp` file contains various tests for the functions performed in the program, including tests for various end cases such as an empty graph and a graph with a negative circle.
+
+## Usage
+
+```cpp
+#include "Algorithms.hpp"
+#include "Graph.hpp"
+
+ariel::Graph g;
+ariel::Graph g2;
+
+//You should load both graphs before usage;
+
+std::string s = ariel::Algorithms::shortestPath(graph, 0, 2);
+std::string bipar = Algorithms::isBipartite(g);
+bool connected = ariel::Algorithms::isConnected(graph);
+bool contains = Algorithms::isContainsCycle(g);
+
+ariel::Graph g3 = g1 + g2;
+g1 *= -2;
+cout << g3;   
+```
+
   
